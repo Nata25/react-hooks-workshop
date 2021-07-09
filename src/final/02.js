@@ -8,7 +8,7 @@ function Greeting({initialName = ''}) {
     window.localStorage.getItem('name') || initialName,
   )
 
-  React.useEffect(() => {
+  React.useEffect(() => {    
     window.localStorage.setItem('name', name)
   })
 
