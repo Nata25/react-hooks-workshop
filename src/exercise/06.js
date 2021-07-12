@@ -30,6 +30,7 @@ function PokemonInfo({pokemonName}) {
   //   2. pokemonName but no pokemon: <PokemonInfoFallback name={pokemonName} />
   //   3. pokemon: <PokemonDataView pokemon={pokemon} />
 
+  const [error, setError] = React.useState(null)
   
   React.useEffect(() => {
     if (!pokemonName) return
@@ -38,14 +39,28 @@ function PokemonInfo({pokemonName}) {
       (pokemonData) => {
         if (pokemonData) {
           setPokemonState(pokemonData)
+          setError(null)
         }
+      },
+      e => {
+        setError(e)
       }
     )
     // 💰 DON'T FORGET THE DEPENDENCIES ARRAY!
   }, [pokemonName])
-  return pokemonState ? <PokemonDataView pokemon={pokemonState} /> : 
-    pokemonName ? <PokemonInfoFallback name={pokemonName} /> : 
-    'Submit a pokemon'
+
+  if (error) {
+    return (
+      <div role="alert">
+        There was an error: <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+      </div>
+    )
+  } else if (pokemonState) {
+    return <PokemonDataView pokemon={pokemonState} />
+  } else if (pokemonName) {
+    return <PokemonInfoFallback name={pokemonName} />
+  }
+  else return 'Submit a pokemon'
 }
 
 function App() {
