@@ -12,6 +12,8 @@ import {
   PokemonDataView
 } from '../pokemon'
 
+import { ErrorBoundary } from 'react-error-boundary'
+
 function PokemonInfo({pokemonName}) {
   // const [pokemonState, setPokemonState] = React.useState(null)
   // const [status, setStatus] = React.useState('idle')
@@ -59,7 +61,7 @@ function PokemonInfo({pokemonName}) {
   return statusesMap[status]()
 }
 
-class ErrorBoundary extends React.Component {
+class CustomErrorBoundary extends React.Component {
   constructor(props) {
     super(props)
     this.state = { error: null }
@@ -81,6 +83,15 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+function FallbackComponent ({ error }) {
+  console.log('FallbackComponent', error)
+  return (
+    <div role="alert">
+      There was an error: <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+    </div>
+  )
+}
+
 function App() {
   const [pokemonName, setPokemonName] = React.useState('')
 
@@ -93,7 +104,7 @@ function App() {
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <ErrorBoundary key={pokemonName}>
+        <ErrorBoundary key={pokemonName} FallbackComponent={FallbackComponent}>
           <PokemonInfo pokemonName={pokemonName} />
         </ErrorBoundary>
       </div>
