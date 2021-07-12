@@ -2,13 +2,9 @@
 // http://localhost:3000/isolated/exercise/04.js
 
 import * as React from 'react'
-// import { useLocalStorageState } from '../utils'
+import { useLocalStorageState } from '../utils'
 
 function Board({ squares, onClick }) {
-  React.useEffect(() => {
-    // window.localStorage.setItem('squares', JSON.stringify(squares))
-  })
-
   function renderSquare(i) {
     return (
       <button className="square" onClick={(e) => onClick(i)}>
@@ -39,9 +35,10 @@ function Board({ squares, onClick }) {
 }
 
 function Game() {
-  // const [history, setHistory] = useLocalStorageState('history', [Array(9).fill(null)])
-  const [history, setHistory] = React.useState([Array(9).fill(null)])
-  const [currentStep, setCurrentStep] = React.useState(0)
+  // const [history, setHistory] = React.useState([Array(9).fill(null)])
+  const [history, setHistory] = useLocalStorageState('tic-tac-toe:history', [Array(9).fill(null)])
+  // const [currentStep, setCurrentStep] = React.useState(0)
+  const [currentStep, setCurrentStep] = useLocalStorageState('tic-tac-toe:step', 0)
   
   let historyCopy = [...history]
   let currentState = historyCopy[currentStep]
@@ -68,7 +65,8 @@ function Game() {
         disabled={currentStep === ind}
         onClick={() => changeHistory(ind)}
       >
-        {ind ? `Go to step #${ind}${currentStep === ind ? ' (current)' : ''}` : 'Go to game start'}
+        {ind ? `Go to move #${ind}` : 'Go to game start'}
+        {`${currentStep === ind ? ' (current)' : ''}`}
       </button>
     </li>
   )
