@@ -83,11 +83,12 @@ class CustomErrorBoundary extends React.Component {
   }
 }
 
-function FallbackComponent ({ error }) {
-  console.log('FallbackComponent', error)
+function FallbackComponent ({ error, resetErrorBoundary }) {
   return (
     <div role="alert">
-      There was an error: <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+      There was an error:{' '}
+      <pre style={{whiteSpace: 'normal'}}>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
     </div>
   )
 }
@@ -99,12 +100,20 @@ function App() {
     setPokemonName(newPokemonName)
   }
 
+  function onReset () {
+    setPokemonName('')
+  }
+
   return (
     <div className="pokemon-info-app">
       <PokemonForm pokemonName={pokemonName} onSubmit={handleSubmit} />
       <hr />
       <div className="pokemon-info">
-        <ErrorBoundary key={pokemonName} FallbackComponent={FallbackComponent}>
+        <ErrorBoundary
+          FallbackComponent={FallbackComponent}
+          onReset={onReset}
+          resetKeys={[pokemonName]}
+        >
           <PokemonInfo pokemonName={pokemonName} />
         </ErrorBoundary>
       </div>
